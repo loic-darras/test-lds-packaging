@@ -1,0 +1,147 @@
+component: 
+  
+  #name: ""
+
+  # Exposition route
+  routes: {}
+
+  #routes:
+  #  main:
+  #    name: "main"
+  #    host: "www.adeo.com"
+  #    path: "/" 
+  #    port: 8080
+  #    external: true
+
+
+  # Additional labels
+  labels: {}
+  
+  # Additional information
+  annotations: {}
+
+  strategy:
+    rollingUpdate:
+      maxSurge: '25%'
+      maxUnavailable: '0%'
+
+  # Deployment image
+  image:
+  #  repository: nginx
+  #  tag: 1.23.4
+    imagePullPolicy: IfNotPresent
+    
+
+  # Initial number of replicas
+  replicas: 1
+
+  ports:
+    main: 8080
+    #admin: 8081
+
+
+  resources: 
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi 
+
+  monitoring:
+    datadog:
+      enabled: true
+
+  termination:
+    gracePeriod: 30
+    restartPolicy: 'Always'
+
+  lifecycle:
+    # postStart: 
+    #  command: 
+    #    tokens:
+    #    - 'sh'
+    #    - '-c'
+    #    - 'sleep 10'
+
+    preStop:
+      command:
+        tokens:
+        - 'sh'
+        - '-c'
+        - 'sleep 10'
+
+
+  #------------
+  # Example exec probe config
+  #------------
+  #livenessProbe:
+  #  exec:
+  #    command:
+  #    - /home/check.sh
+      
+
+  #startupProbe:
+  #  httpGet:
+  #    path: /
+
+  #readinessProbe:
+  #  httpGet:
+  #    path: /
+
+  #livenessProbe:
+  #  httpGet:
+  #    path: /
+
+
+  #######################
+  # HPA v2 configuration
+  #######################
+
+  #-----------
+  # Example hpa/v2 config
+  #----------
+  #hpa:
+  #  minReplicas: 1
+  #  maxReplicas: 2
+  #  behavior:
+  #    scaleDown:
+  #      stabilizationWindowSeconds: 60
+  #  metrics: 
+  #  - type: Resource
+  #    resource:
+  #      name: cpu
+  #      target:
+  #        type: Utilization
+  #        averageUtilization: 50
+
+
+  #######################
+  # WPA configuration 
+  ######################
+  #-----------
+  # Example wpa config
+  # ----------
+  #wpa:
+  #  minReplicas: 1
+  #  maxReplicas: 2
+  #  downscaleForbiddenWindowSeconds: 60
+  #  upscaleForbiddenWindowSeconds: 30
+  #  scaleDownLimitFactor: 30
+  #  scaleUpLimitFactor: 50
+  #  minAvailableReplicaPercentage: 20
+  #  tolerance: "0.01"
+  #  dryRun: true
+  #  readinessDelaySeconds: 5
+  #  algorithm: absolute
+  #  metrics: 
+  #  - external:
+  #      highWatermark: 400m
+  #      lowWatermark: 150m
+  #      metricName: custom.request_duration.max
+  #      metricSelector:
+  #        matchLabels:
+  #          kubernetes_cluster: mycluster
+  #          service: billing
+  #          short_image: billing-app
+  #    type: External

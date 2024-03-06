@@ -1,0 +1,35 @@
+suite: test nominal WPA
+templates:
+  - wpa.yaml
+tests:
+  - it: should work
+    values: 
+    - ../../../helm/tests/testcases/deployment/nominal.yaml
+    - ../../../helm/tests/testcases/product/nominal.yaml
+    - ../testcases/component/base.yaml
+    - ../testcases/component/wpa/nominal.yaml
+   
+    asserts:
+      - isKind:
+          of: WatermarkPodAutoscaler
+      - isAPIVersion:
+          of: datadoghq.com/v1alpha1
+      - matchRegex:
+          path: metadata.name
+          pattern: api-demo
+      - equal:
+          path: spec.minReplicas
+          value: 1
+      - equal:
+          path: spec.maxReplicas
+          value: 2
+      - equal:
+          path: spec.metrics[0].external.lowWatermark
+          value: 150m
+      - equal:
+          path: spec.metrics[0].external.highWatermark
+          value: 400m
+      - equal:
+          path: spec.metrics[0].external.metricName
+          value: custom.request_memory.max
+

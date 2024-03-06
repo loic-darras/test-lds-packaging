@@ -1,0 +1,8 @@
+nameOverride: "api-demo"
+component:
+  env:
+    - name: FOO_ENV
+      value: bar
+  image: 
+    repository: "adeo-docker.jfrog.io/demo/api-demo"
+    tag: "v1.0.0"

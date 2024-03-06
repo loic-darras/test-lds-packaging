@@ -1,0 +1,96 @@
+suite: test nominal deployment
+templates:
+  - deployment.yaml
+tests:
+  - it: should work
+    values:  
+    - ../../../helm/tests/testcases/deployment/nominal.yaml
+    - ../../../helm/tests/testcases/product/nominal.yaml
+    set:
+      nameOverride: "app-front"
+      component.image.repository: adeo.jfrog/nginx
+      component.image.tag: v1.2.3
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - matchRegex:
+          path: metadata.name
+          pattern: app-front
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: adeo.jfrog/nginx:v1.2.3
+  - it: set main and admin port
+    values: 
+    - ../../../helm/tests/testcases/deployment/nominal.yaml
+    - ../../../helm/tests/testcases/product/nominal.yaml
+    set:
+      nameOverride: "app-front"
+      component.image.repository: adeo.jfrog/nginx
+      component.image.tag: v1.2.3
+      component.ports.main: 4200
+      component.ports.admin: 4300
+      component.livenessProbe.httpGet.path: /
+      component.readinessProbe.httpGet.path: /
+      component.readinessProbe.initialDelaySeconds: 1234
+      component.readinessProbe.periodSeconds: 33
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - matchRegex:
+          path: metadata.name
+          pattern: app-front
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: adeo.jfrog/nginx:v1.2.3
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].containerPort
+          value: 4200
+      - equal:
+          path: spec.template.spec.containers[0].ports[1].containerPort
+          value: 4300
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: 4300
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: 4300
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.initialDelaySeconds
+          value: 1234
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.periodSeconds
+          value: 33
+          
+
+
+  - it: check liveness for only port overrided 
+    values: 
+    - ../../../helm/tests/testcases/deployment/nominal.yaml
+    - ../../../helm/tests/testcases/product/nominal.yaml
+    set:
+      nameOverride: "app-front"
+      component.image.repository: adeo.jfrog/nginx
+      component.image.tag: v1.2.3
+      component.ports.main: 4200
+      component.livenessProbe.httpGet.port: 4200
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - matchRegex:
+          path: metadata.name
+          pattern: app-front
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: adeo.jfrog/nginx:v1.2.3
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].containerPort
+          value: 4200
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: 4200

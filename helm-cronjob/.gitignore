@@ -1,0 +1,6 @@
+manifests
+tmp-*
+.vscode/
+.idea/
+*.iml
+catalog-crds-scripts/openapi2jsonschema.py

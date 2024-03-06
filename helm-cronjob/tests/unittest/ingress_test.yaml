@@ -1,0 +1,31 @@
+suite: test nominal Ingress
+templates:
+  - ingress.yaml
+tests:
+  - it: should work
+    values: 
+    - ../../../helm/tests/testcases/deployment/nominal.yaml
+    - ../../../helm/tests/testcases/product/nominal.yaml
+    - ../testcases/component/base.yaml
+    - ../testcases/component/ingress/nominal.yaml
+   
+    asserts:
+      - isKind:
+          of: Ingress
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+      - matchRegex:
+          path: metadata.name
+          pattern: api-demo-main
+      - equal:
+          path: spec.rules[0].http.paths[0].path
+          value: "/test"
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: "ImplementationSpecific"
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: 'api-demo'
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8080

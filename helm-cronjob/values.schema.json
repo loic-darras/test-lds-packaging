@@ -1,0 +1,49 @@
+{
+    "$id": "file://./values.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "deployment",
+        "product",
+        "component",
+        "nameOverride"
+    ],
+    "properties": {
+        "nameOverride": {
+            "description": "Name of the component deployed",
+            "type": "string"
+        },
+        "deployment": {
+            "description": "Deployment information",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "subdomain": {
+                    "type": "string"
+                },
+                "context": {
+                    "$ref": "schemas/context.schema.json"
+                }
+            }
+        },
+        "product": {
+            "description": "Define a product",
+            "type": "object",
+            "required": [
+                "metadata"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "metadata": {
+                    "$ref": "schemas/product.schema.json#/$def/Metadata"
+                }
+            }
+        },
+        "component": {
+            "$ref": "schemas/components/api.schema.json"
+        }
+    }
+}
