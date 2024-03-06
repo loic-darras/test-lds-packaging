@@ -1,1 +1,0 @@
-../../helm/templates/_common_helpers.tpl
