@@ -11,7 +11,7 @@ spec:
   sources:
     - chart: external-dns
       repoURL: 'https://github.com/loic-darras/test-lds-packaging'
-      targetRevision: main
+      targetRevision: HEAD
   project: default
   syncPolicy:
     automated:
